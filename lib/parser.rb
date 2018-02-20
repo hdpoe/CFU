@@ -10,13 +10,24 @@ module Parser
 
   def parse_doc(document)
     result = ''
+    footer = ''
 
     document.each do |line|
       result.concat(parse_line(line))
-      'public static '
+      footer = "}\n" if line[:type] == :class
     end
+    result.concat(footer)
+    result
   end
 
   def parse_line(line) 
+    result = ''
+    if line[:type] == :class 
+      if line[:items][:visibility] == :every
+        result.concat('public class ')
+      end
+    end
+    result.concat(line[:id] + " {\n")
+    result
   end
 end
